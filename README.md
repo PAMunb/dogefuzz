@@ -1,6 +1,6 @@
 # Dogefuzz: A flexible fuzzer to detect common vulnerabilities in Smart Contracts
 
-## Setup services using docker
+## Setup with docker
 
 First, run the docker-compose file to start the local EVM (geth) node and Vandal API server.
 
@@ -16,7 +16,7 @@ For previous Docker versions:
 docker-compose -f ./infra/docker-compose.yml up -d
 ```
 
-## Setup geth service without docker (for debugging)
+## Setup without docker (for debugging only)
 
 First, you need to run vandal using docker: 
 
