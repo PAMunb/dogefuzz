@@ -27,7 +27,8 @@ docker compose  -f "infra/docker-compose.yml" up -d --build vandal
 Second, to run geth outside of docker, follow the steps below:
 
 1. Clone the repo https://github.com/PAMunb/dogefuzz-enhanced-go-ethereum
-2. Run the following commands inside the cloned dir
+2. Run the following commands inside the cloned dir:
+
 ```
 go run build/ci.go install -static ./cmd/geth
 ln -s build/bin/geth geth
