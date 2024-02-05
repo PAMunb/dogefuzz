@@ -45,6 +45,7 @@ go build ./cmd/dogefuzz && go run ./cmd/dogefuzz
 ```
 
 The server will start listening to port 3456 (default).
+
 To configure the fuzzer behavior, look into the [config.json](config.json) file.
 
 To execute a fuzzing process, here is an example of a request:
