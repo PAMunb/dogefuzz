@@ -77,8 +77,9 @@ type DistanceMap map[string]map[string]uint32 // blockPC => instruction => dista
 type PowerScheduleStrategy string
 
 const (
-	DISTANCE_BASED_STRATEGY PowerScheduleStrategy = "distance_based"
-	COVERAGE_BASED_STRATEGY PowerScheduleStrategy = "coverage_based"
+	DISTANCE_BASED_STRATEGY          PowerScheduleStrategy = "distance_based"
+	COVERAGE_BASED_STRATEGY          PowerScheduleStrategy = "coverage_based"
+	DISTANCE_COVERAGE_BASED_STRATEGY PowerScheduleStrategy = "distance_coverage_based"
 )
 
 type TaskReport struct {
