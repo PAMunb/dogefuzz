@@ -30,9 +30,10 @@ var (
 type FuzzingType string
 
 const (
-	BLACKBOX_FUZZING         FuzzingType = "blackbox"
-	GREYBOX_FUZZING          FuzzingType = "greybox"
-	DIRECTED_GREYBOX_FUZZING FuzzingType = "directed_greybox"
+	BLACKBOX_FUZZING               FuzzingType = "blackbox"
+	GREYBOX_FUZZING                FuzzingType = "greybox"
+	DIRECTED_GREYBOX_FUZZING       FuzzingType = "directed_greybox"
+	OTHER_DIRECTED_GREYBOX_FUZZING FuzzingType = "other_directed_greybox"
 )
 
 type ContractStatus string
