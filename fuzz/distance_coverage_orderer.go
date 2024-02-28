@@ -40,9 +40,10 @@ func (o *distanceCoverageBasedOrderer) computeDistance(transaction *dto.Transact
 	var maxDistance map[string]uint32
 	var distanceSum int64 = 0
 	var distancePercentage float64 = 0
+	var minDistance uint64 = transaction.DeltaMinDistance
 
 	for _, distance := range o.contract.DistanceMap {
-		if maxDistance != nil {
+		if maxDistance == nil {
 			maxDistance = make(map[string]uint32)
 			for pc := range distance {
 				maxDistance[pc] = 0
@@ -62,8 +63,12 @@ func (o *distanceCoverageBasedOrderer) computeDistance(transaction *dto.Transact
 		distanceSum += int64(distance)
 	}
 
+	if minDistance >= uint64(math.MaxUint32) {
+		minDistance -= math.MaxUint32
+	}
+
 	if distanceSum != 0 {
-		distancePercentage = (float64(distanceSum) - float64(transaction.DeltaMinDistance)) / float64(distanceSum)
+		distancePercentage = float64(minDistance) / float64(distanceSum)
 	}
 
 	return distancePercentage
