@@ -26,14 +26,14 @@ func (o *distanceCoverageBasedOrderer) computeScore(transaction *dto.Transaction
 }
 
 func (o *distanceCoverageBasedOrderer) computeCoverage(transaction *dto.TransactionDTO) float64 {
-	var totalInstructions = len(o.contract.DistanceMap)
-	var coveragePercentage float64 = 0
+	var totalInstructions = len(o.contract.CFG.Instructions)
+	var executedInstructions = len(transaction.ExecutedInstructions)
 
 	if totalInstructions != 0 {
-		coveragePercentage = float64(transaction.Coverage) / float64(totalInstructions)
+		return float64(executedInstructions) / float64(totalInstructions)
 	}
 
-	return coveragePercentage
+	return 0
 }
 
 func (o *distanceCoverageBasedOrderer) computeDistance(transaction *dto.TransactionDTO) float64 {
@@ -75,11 +75,9 @@ func (o *distanceCoverageBasedOrderer) computeDistance(transaction *dto.Transact
 }
 
 func (o *distanceCoverageBasedOrderer) computeCriticalInstructionsHits(transaction *dto.TransactionDTO) float64 {
-	var hitsPercentage float64 = 0
-
 	if o.contract.TargetInstructionsFreq != 0 {
-		hitsPercentage = float64(transaction.CriticalInstructionsHits) / float64(o.contract.TargetInstructionsFreq)
+		return float64(transaction.CriticalInstructionsHits) / float64(o.contract.TargetInstructionsFreq)
 	}
 
-	return hitsPercentage
+	return 0
 }
