@@ -8,17 +8,15 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 )
 
-// This is temporally, it is like 'directed_greybox' but with another strategy to order seeds
-type otherDirectedGreyboxFuzzer struct {
-	powerSchedule interfaces.PowerSchedule
-
+type geneticAlgorithmFuzzer struct {
+	powerSchedule   interfaces.PowerSchedule
 	solidityService interfaces.SolidityService
 	functionService interfaces.FunctionService
 	contractService interfaces.ContractService
 }
 
-func NewOtherDirectedGreyboxFuzzer(e env) *otherDirectedGreyboxFuzzer {
-	return &otherDirectedGreyboxFuzzer{
+func NewGeneticAlgorithmFuzzer(e env) *geneticAlgorithmFuzzer {
+	return &geneticAlgorithmFuzzer{
 		powerSchedule:   e.PowerSchedule(),
 		solidityService: e.SolidityService(),
 		functionService: e.FunctionService(),
@@ -26,7 +24,7 @@ func NewOtherDirectedGreyboxFuzzer(e env) *otherDirectedGreyboxFuzzer {
 	}
 }
 
-func (f *otherDirectedGreyboxFuzzer) GenerateInput(functionId string) ([]interface{}, error) {
+func (f *geneticAlgorithmFuzzer) GenerateInput(functionId string) ([]interface{}, error) {
 	function, err := f.functionService.Get(functionId)
 	if err != nil {
 		return nil, err

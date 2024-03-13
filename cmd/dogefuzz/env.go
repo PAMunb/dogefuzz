@@ -76,7 +76,7 @@ type Env interface {
 	BlackboxFuzzer() interfaces.Fuzzer
 	GreyboxFuzzer() interfaces.Fuzzer
 	DirectedGreyboxFuzzer() interfaces.Fuzzer
-	OtherDirectedGreyboxFuzzer() interfaces.Fuzzer
+	GeneticAlgorithmFuzzer() interfaces.Fuzzer
 	PowerSchedule() interfaces.PowerSchedule
 }
 
@@ -129,12 +129,12 @@ type env struct {
 	transactionsCheckerJob        interfaces.CronJob
 	transactionsTimeoutCheckerJob interfaces.CronJob
 
-	fuzzerLeader               interfaces.FuzzerLeader
-	blackboxFuzzer             interfaces.Fuzzer
-	greyboxFuzzer              interfaces.Fuzzer
-	directedGreyboxFuzzer      interfaces.Fuzzer
-	otherDirectedGreyboxFuzzer interfaces.Fuzzer
-	powerSchedule              interfaces.PowerSchedule
+	fuzzerLeader           interfaces.FuzzerLeader
+	blackboxFuzzer         interfaces.Fuzzer
+	greyboxFuzzer          interfaces.Fuzzer
+	directedGreyboxFuzzer  interfaces.Fuzzer
+	geneticAlgorithmFuzzer interfaces.Fuzzer
+	powerSchedule          interfaces.PowerSchedule
 }
 
 func NewEnv(cfg *config.Config) *env {
@@ -479,11 +479,11 @@ func (e *env) DirectedGreyboxFuzzer() interfaces.Fuzzer {
 	return e.directedGreyboxFuzzer
 }
 
-func (e *env) OtherDirectedGreyboxFuzzer() interfaces.Fuzzer {
-	if e.otherDirectedGreyboxFuzzer == nil {
-		e.otherDirectedGreyboxFuzzer = fuzz.NewOtherDirectedGreyboxFuzzer(e)
+func (e *env) GeneticAlgorithmFuzzer() interfaces.Fuzzer {
+	if e.geneticAlgorithmFuzzer == nil {
+		e.geneticAlgorithmFuzzer = fuzz.NewGeneticAlgorithmFuzzer(e)
 	}
-	return e.otherDirectedGreyboxFuzzer
+	return e.geneticAlgorithmFuzzer
 }
 
 func (e *env) PowerSchedule() interfaces.PowerSchedule {
