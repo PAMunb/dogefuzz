@@ -1,12 +1,22 @@
 package fuzz
 
 import (
+	"math/rand"
 	"strings"
+	"time"
 
 	"github.com/dogefuzz/dogefuzz/pkg/common"
 	"github.com/dogefuzz/dogefuzz/pkg/interfaces"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 )
+
+// consts to define what interval of the seeds slice will selected
+const FIRST_INTERVAL float64 = 0.6
+const SECOND_INTERVAL float64 = 0.8
+
+// consts to define what range interval will used to prioritize some seeds
+const FIRST_RANGE float64 = 0.4
+const SECOND_RANGE float64 = 0.7
 
 type geneticAlgorithmFuzzer struct {
 	powerSchedule   interfaces.PowerSchedule
@@ -46,7 +56,12 @@ func (f *geneticAlgorithmFuzzer) GenerateInput(functionId string) ([]interface{}
 		return nil, err
 	}
 
-	chosenSeeds := common.RandomChoice(seedsList)
+	var newSeedsList [][]interface{}
+	for range seedsList {
+		newSeedsList = append(newSeedsList, rouletteWheelSelection(seedsList))
+	}
+
+	chosenSeeds := common.RandomChoice(newSeedsList)
 
 	inputs := make([]interface{}, len(method.Inputs))
 	for inputsIdx, inputDefinition := range method.Inputs {
@@ -61,4 +76,24 @@ func (f *geneticAlgorithmFuzzer) GenerateInput(functionId string) ([]interface{}
 	}
 
 	return inputs, nil
+}
+
+func rouletteWheelSelection(seedsList [][]interface{}) []interface{} {
+	rand.Seed(time.Now().UnixNano())
+	rnd := rand.Float64()
+
+	if rnd >= 0 || rnd < FIRST_INTERVAL {
+		slice := seedsList[0:int(float64(len(seedsList))*FIRST_RANGE)]
+
+		return common.RandomChoice(slice)
+	} else if rnd >= FIRST_INTERVAL || rnd < SECOND_INTERVAL {
+		slice := seedsList[int(float64(len(seedsList))*FIRST_RANGE):int(float64(len(seedsList))*SECOND_RANGE)]
+
+		return common.RandomChoice(slice)
+	} else {
+		slice := seedsList[int(float64(len(seedsList))*SECOND_RANGE):]
+
+		return common.RandomChoice(slice)
+	}
+
 }
