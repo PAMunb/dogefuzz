@@ -13,6 +13,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/dogefuzz/dogefuzz/pkg/common"
@@ -25,10 +26,15 @@ var ErrContractNotFound = errors.New("the contract was not found in compiled cod
 
 type solidityCompiler struct {
 	storageFolder string
+	versions      []string
 }
 
 func NewSolidityCompiler(storageFolder string) *solidityCompiler {
-	return &solidityCompiler{storageFolder: storageFolder}
+	versions, err := getDescendingOrderedVersionsFromSolidyBinariesEndpoint()
+	if err != nil {
+		versions = []string{}
+	}
+	return &solidityCompiler{storageFolder: storageFolder, versions: versions}
 }
 
 func (c *solidityCompiler) CompileSource(contractName string, contractSource string) (*common.Contract, error) {
@@ -36,12 +42,24 @@ func (c *solidityCompiler) CompileSource(contractName string, contractSource str
 		return nil, ErrEmptySourceFile
 	}
 
-	solcVersion, err := getIdealSolcVersionBasedOnSource(contractSource)
-	if err != nil {
-		return nil, err
+	var solcVersion *semver.Version
+	maxRetries := 5
+	var err error
+	for retries := 1; retries <= maxRetries; retries++ {
+		if retries == maxRetries {
+			return nil, err
+		}
+
+		solcVersion, err = c.getIdealSolcVersionBasedOnSource(contractSource)
+		if err != nil {
+			time.Sleep(100 * time.Millisecond)
+			continue
+		}
+		break
 	}
 
 	var solcBinaryLocation string
+
 	if location, ok := c.getSolcBinaryLocationIfExists(solcVersion); ok {
 		solcBinaryLocation = location
 	} else {
@@ -154,10 +172,14 @@ func run(cmd *exec.Cmd, source string, maxVersion *semver.Version) (map[string]*
 	return compiler.ParseCombinedJSON(stdout.Bytes(), source, maxVersion.String(), maxVersion.String(), strings.Join(buildArgs(maxVersion), " "))
 }
 
-func getIdealSolcVersionBasedOnSource(source string) (*semver.Version, error) {
-	versions, err := getDescendingOrderedVersionsFromSolidyBinariesEndpoint()
-	if err != nil {
-		return nil, err
+func (c *solidityCompiler) getIdealSolcVersionBasedOnSource(source string) (*semver.Version, error) {
+	var versions = c.versions
+	if len(versions) == 0 {
+		var err error
+		versions, err = getDescendingOrderedVersionsFromSolidyBinariesEndpoint()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	versionConstraint, err := extractVersionConstraintFromSource(source)
