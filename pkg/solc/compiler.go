@@ -151,7 +151,7 @@ func (c *solidityCompiler) downloadSolcBinaryBasedOnVersion(version *semver.Vers
 func buildArgs(version *semver.Version) []string {
 	p := []string{
 		"--combined-json", "ast,bin,bin-runtime,srcmap,srcmap-runtime,abi,userdoc,devdoc",
-		//"--optimize",                  // code optimizer switched on
+		"--optimize",                  // code optimizer switched on
 		"--allow-paths", "., ./, ../", // default to support relative path： ./  ../  .
 	}
 	version0_4_6, _ := semver.NewVersion("0.4.6")
