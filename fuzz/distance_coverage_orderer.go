@@ -7,6 +7,10 @@ import (
 	"github.com/dogefuzz/dogefuzz/pkg/dto"
 )
 
+const WEIGHT_1 = 2
+const WEIGHT_2 = 4
+const WEIGHT_3 = 4
+
 type distanceCoverageBasedOrderer struct {
 	contract *dto.ContractDTO
 }
@@ -22,7 +26,10 @@ func (o *distanceCoverageBasedOrderer) OrderTransactions(transactions []*dto.Tra
 }
 
 func (o *distanceCoverageBasedOrderer) computeScore(transaction *dto.TransactionDTO) float64 {
-	return math.Max(o.computeCriticalInstructionsHits(transaction), math.Max(o.computeCoverage(transaction), o.computeDistance(transaction)))
+	// 2, 4, 4
+	return WEIGHT_1*o.computeCriticalInstructionsHits(transaction) +
+		WEIGHT_2*o.computeDistance(transaction) +
+		WEIGHT_3*o.computeCoverage(transaction)
 }
 
 func (o *distanceCoverageBasedOrderer) computeCoverage(transaction *dto.TransactionDTO) float64 {
