@@ -8,8 +8,8 @@ import (
 )
 
 const WEIGHT_1 = 1
-const WEIGHT_2 = 3
-const WEIGHT_3 = 6
+const WEIGHT_2 = 6
+const WEIGHT_3 = 3
 
 type distanceCoverageBasedOrderer struct {
 	contract *dto.ContractDTO
@@ -26,7 +26,7 @@ func (o *distanceCoverageBasedOrderer) OrderTransactions(transactions []*dto.Tra
 }
 
 func (o *distanceCoverageBasedOrderer) computeScore(transaction *dto.TransactionDTO) float64 {
-	// 1, 3, 6
+	// 1, 6, 3
 	return WEIGHT_1*o.computeCriticalInstructionsHits(transaction) +
 		WEIGHT_2*o.computeDistance(transaction) +
 		WEIGHT_3*o.computeCoverage(transaction)
