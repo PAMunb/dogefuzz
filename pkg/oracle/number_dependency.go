@@ -11,5 +11,6 @@ func (o NumberDependencyOracle) Name() common.OracleType {
 }
 
 func (o NumberDependencyOracle) Detect(snapshot common.EventsSnapshot) bool {
-	return snapshot.BlockNumber && (snapshot.StorageChanged || snapshot.EtherTransfer || snapshot.SendOp)
+	return (snapshot.BlockNumber || snapshot.BlockHash) && (snapshot.StorageChanged || snapshot.EtherTransfer || snapshot.SendOp)
+	//return snapshot.BlockNumber && (snapshot.StorageChanged || snapshot.EtherTransfer || snapshot.SendOp)
 }
