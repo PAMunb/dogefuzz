@@ -17,6 +17,7 @@ type env interface {
 	DirectedGreyboxFuzzer() interfaces.Fuzzer
 	GeneticAlgorithmFuzzer() interfaces.Fuzzer
 	PowerSchedule() interfaces.PowerSchedule
+	GeneticAlgorithmPowerSchedule() interfaces.GeneticAlgorithmPowerSchedule
 
 	TransactionService() interfaces.TransactionService
 	SolidityService() interfaces.SolidityService

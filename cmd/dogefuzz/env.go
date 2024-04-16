@@ -78,6 +78,7 @@ type Env interface {
 	DirectedGreyboxFuzzer() interfaces.Fuzzer
 	GeneticAlgorithmFuzzer() interfaces.Fuzzer
 	PowerSchedule() interfaces.PowerSchedule
+	GeneticAlgorithmPowerSchedule() interfaces.GeneticAlgorithmPowerSchedule
 }
 
 type env struct {
@@ -129,12 +130,13 @@ type env struct {
 	transactionsCheckerJob        interfaces.CronJob
 	transactionsTimeoutCheckerJob interfaces.CronJob
 
-	fuzzerLeader           interfaces.FuzzerLeader
-	blackboxFuzzer         interfaces.Fuzzer
-	greyboxFuzzer          interfaces.Fuzzer
-	directedGreyboxFuzzer  interfaces.Fuzzer
-	geneticAlgorithmFuzzer interfaces.Fuzzer
-	powerSchedule          interfaces.PowerSchedule
+	fuzzerLeader                  interfaces.FuzzerLeader
+	blackboxFuzzer                interfaces.Fuzzer
+	greyboxFuzzer                 interfaces.Fuzzer
+	directedGreyboxFuzzer         interfaces.Fuzzer
+	geneticAlgorithmFuzzer        interfaces.Fuzzer
+	powerSchedule                 interfaces.PowerSchedule
+	geneticAlgorithmPowerSchedule interfaces.GeneticAlgorithmPowerSchedule
 }
 
 func NewEnv(cfg *config.Config) *env {
@@ -491,6 +493,13 @@ func (e *env) PowerSchedule() interfaces.PowerSchedule {
 		e.powerSchedule = fuzz.NewPowerSchedule(e)
 	}
 	return e.powerSchedule
+}
+
+func (e *env) GeneticAlgorithmPowerSchedule() interfaces.GeneticAlgorithmPowerSchedule {
+	if e.geneticAlgorithmPowerSchedule == nil {
+		e.geneticAlgorithmPowerSchedule = fuzz.NewGeneticAlgorithmPowerSchedule(e)
+	}
+	return e.geneticAlgorithmPowerSchedule
 }
 
 func initLogger() (*zap.Logger, error) {

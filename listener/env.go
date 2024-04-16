@@ -42,4 +42,5 @@ type Env interface {
 	DirectedGreyboxFuzzer() interfaces.Fuzzer
 	GeneticAlgorithmFuzzer() interfaces.Fuzzer
 	PowerSchedule() interfaces.PowerSchedule
+	GeneticAlgorithmPowerSchedule() interfaces.GeneticAlgorithmPowerSchedule
 }

@@ -12,6 +12,10 @@ type PowerSchedule interface {
 	RequestSeeds(functionId string, strategy common.PowerScheduleStrategy) ([][]interface{}, error)
 }
 
+type GeneticAlgorithmPowerSchedule interface {
+	RequestSeeds(functionId string, strategy common.PowerScheduleStrategy) ([][]interface{}, error)
+}
+
 type Fuzzer interface {
 	GenerateInput(functionId string) ([]interface{}, error)
 }

@@ -10,3 +10,12 @@ func RandomChoice[T any](slice []T) T {
 	rndIdx := rand.Intn(len(slice))
 	return slice[rndIdx]
 }
+
+func RandomFloat64() float64 {
+	rand.Seed(time.Now().UnixNano())
+	return rand.Float64()
+}
+
+func RandomInt(number int) int {
+	return rand.Intn(number)
+}
