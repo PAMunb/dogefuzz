@@ -8,15 +8,7 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 )
 
-const MUTATION_CHANCE float64 = 0.1
-
-// consts to define what interval of the seeds slice will selected
-const FIRST_INTERVAL float64 = 0.6
-const SECOND_INTERVAL float64 = 0.8
-
-// consts to define what range interval will used to prioritize some seeds
-const FIRST_RANGE float64 = 0.4
-const SECOND_RANGE float64 = 0.7
+const MUTATION_CHANCE = 0.1
 
 type geneticAlgorithmFuzzer struct {
 	geneticAlgorithmPowerSchedule interfaces.GeneticAlgorithmPowerSchedule
@@ -60,9 +52,9 @@ func (f *geneticAlgorithmFuzzer) GenerateInput(functionId string) ([]interface{}
 	chosenSeeds := common.RandomChoice(seedsList)
 
 	inputs := make([]interface{}, len(method.Inputs))
+	// generate an method input, this method can needs more than one argument
 	for inputsIdx, inputDefinition := range method.Inputs {
 		rnd := common.RandomFloat64()
-
 		handler, err := f.solidityService.GetTypeHandlerWithContext(inputDefinition.Type)
 		if err != nil {
 			return nil, err
@@ -70,7 +62,7 @@ func (f *geneticAlgorithmFuzzer) GenerateInput(functionId string) ([]interface{}
 
 		handler.SetValue(chosenSeeds[inputsIdx])
 
-		if rnd >= 0 && rnd < MUTATION_CHANCE {
+		if rnd < MUTATION_CHANCE {
 			mutationFunction := common.RandomChoice(handler.GetMutators())
 			mutationFunction()
 		}
