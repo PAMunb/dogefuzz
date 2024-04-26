@@ -16,6 +16,3 @@ func RandomFloat64() float64 {
 	return rand.Float64()
 }
 
-func RandomInt(number int) int {
-	return rand.Intn(number)
-}
