@@ -7,6 +7,12 @@ import (
 	"github.com/dogefuzz/dogefuzz/pkg/dto"
 )
 
+const (
+	HITS_WEIGHT_MO     = 0.1
+	COVERAGE_WEIGHT_MO = 0.6
+	DISTANCE_WEIGHT_MO = 0.3
+)
+
 type distanceCoverageBasedOrderer struct {
 	contract *dto.ContractDTO
 }
@@ -22,7 +28,9 @@ func (o *distanceCoverageBasedOrderer) OrderTransactions(transactions []*dto.Tra
 }
 
 func (o *distanceCoverageBasedOrderer) computeScore(transaction *dto.TransactionDTO) float64 {
-	return math.Max(o.computeCriticalInstructionsHits(transaction), math.Max(o.computeCoverage(transaction), o.computeDistance(transaction)))
+	return HITS_WEIGHT_MO*o.computeCriticalInstructionsHits(transaction) +
+		COVERAGE_WEIGHT_MO*o.computeCoverage(transaction) +
+		DISTANCE_WEIGHT_MO*o.computeDistance(transaction)
 }
 
 func (o *distanceCoverageBasedOrderer) computeCoverage(transaction *dto.TransactionDTO) float64 {
@@ -39,8 +47,6 @@ func (o *distanceCoverageBasedOrderer) computeCoverage(transaction *dto.Transact
 func (o *distanceCoverageBasedOrderer) computeDistance(transaction *dto.TransactionDTO) float64 {
 	var maxDistance map[string]uint32
 	var distanceSum int64 = 0
-	var distancePercentage float64 = 0
-	var minDistance uint64 = transaction.DeltaMinDistance
 
 	for _, distance := range o.contract.DistanceMap {
 		if maxDistance == nil {
@@ -63,15 +69,11 @@ func (o *distanceCoverageBasedOrderer) computeDistance(transaction *dto.Transact
 		distanceSum += int64(distance)
 	}
 
-	if minDistance >= uint64(math.MaxUint32) {
-		minDistance -= math.MaxUint32
-	}
-
 	if distanceSum != 0 {
-		distancePercentage = float64(minDistance) / float64(distanceSum)
+		return float64(transaction.DeltaMinDistance) / float64(distanceSum)
 	}
 
-	return distancePercentage
+	return 0
 }
 
 func (o *distanceCoverageBasedOrderer) computeCriticalInstructionsHits(transaction *dto.TransactionDTO) float64 {
