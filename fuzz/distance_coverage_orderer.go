@@ -16,68 +16,33 @@ func newDistanceCoverageBasedOrderer(contract *dto.ContractDTO) *distanceCoverag
 }
 
 func (o *distanceCoverageBasedOrderer) OrderTransactions(transactions []*dto.TransactionDTO) {
+	mapped := mapperExecutedInstructions(transactions)
+
 	sort.SliceStable(transactions, func(i, j int) bool {
-		return o.computeScore(transactions[i]) > o.computeScore(transactions[j])
+		return evaluateSeedCoverage(mapped, transactions[i]) < evaluateSeedCoverage(mapped, transactions[j])
 	})
 }
 
-func (o *distanceCoverageBasedOrderer) computeScore(transaction *dto.TransactionDTO) float64 {
-	return math.Max(o.computeCriticalInstructionsHits(transaction), math.Max(o.computeCoverage(transaction), o.computeDistance(transaction)))
-}
+func mapperExecutedInstructions(transactions []*dto.TransactionDTO) map[string]float64 {
+	executedInstructions := make(map[string]float64)
 
-func (o *distanceCoverageBasedOrderer) computeCoverage(transaction *dto.TransactionDTO) float64 {
-	var totalInstructions = len(o.contract.CFG.Instructions)
-	var executedInstructions = len(transaction.ExecutedInstructions)
-
-	if totalInstructions != 0 {
-		return float64(executedInstructions) / float64(totalInstructions)
-	}
-
-	return 0
-}
-
-func (o *distanceCoverageBasedOrderer) computeDistance(transaction *dto.TransactionDTO) float64 {
-	var maxDistance map[string]uint32
-	var distanceSum int64 = 0
-	var distancePercentage float64 = 0
-	var minDistance uint64 = transaction.DeltaMinDistance
-
-	for _, distance := range o.contract.DistanceMap {
-		if maxDistance == nil {
-			maxDistance = make(map[string]uint32)
-			for pc := range distance {
-				maxDistance[pc] = 0
-			}
-		}
-
-		for instr := range maxDistance {
-			if val, ok := distance[instr]; ok {
-				if val != math.MaxUint32 && val > maxDistance[instr] {
-					maxDistance[instr] = val
-				}
-			}
+	for _, t := range transactions {
+		for _, instruction := range t.ExecutedInstructions {
+			executedInstructions[instruction] += 1
 		}
 	}
 
-	for _, distance := range maxDistance {
-		distanceSum += int64(distance)
-	}
-
-	if minDistance >= uint64(math.MaxUint32) {
-		minDistance -= math.MaxUint32
-	}
-
-	if distanceSum != 0 {
-		distancePercentage = float64(minDistance) / float64(distanceSum)
-	}
-
-	return distancePercentage
+	return executedInstructions
 }
 
-func (o *distanceCoverageBasedOrderer) computeCriticalInstructionsHits(transaction *dto.TransactionDTO) float64 {
-	if o.contract.TargetInstructionsFreq != 0 {
-		return float64(transaction.CriticalInstructionsHits) / float64(o.contract.TargetInstructionsFreq)
+// compute coverage
+func evaluateSeedCoverage(hitMap map[string]float64, transaction *dto.TransactionDTO) float64 {
+	var score float64 = 0.0
+	var a float64 = 5
+
+	for _, execInstruction := range transaction.ExecutedInstructions {
+		score += (1 / hitMap[execInstruction])
 	}
 
-	return 0
+	return math.Pow(score, a)
 }
