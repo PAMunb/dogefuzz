@@ -15,7 +15,7 @@ type env interface {
 	BlackboxFuzzer() interfaces.Fuzzer
 	GreyboxFuzzer() interfaces.Fuzzer
 	DirectedGreyboxFuzzer() interfaces.Fuzzer
-	OtherDirectedGreyboxFuzzer() interfaces.Fuzzer
+	MultiObjectiveGreyboxFuzzer() interfaces.Fuzzer
 	PowerSchedule() interfaces.PowerSchedule
 
 	TransactionService() interfaces.TransactionService
