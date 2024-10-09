@@ -9,6 +9,7 @@ type fuzzerLeader struct {
 	blackboxFuzzer             interfaces.Fuzzer
 	greyboxFuzzer              interfaces.Fuzzer
 	directedGreyboxFuzzer      interfaces.Fuzzer
+	directedGreybox2Fuzzer     interfaces.Fuzzer
 	otherDirectedGreyboxFuzzer interfaces.Fuzzer
 }
 
@@ -17,6 +18,7 @@ func NewFuzzerLeader(e env) *fuzzerLeader {
 		blackboxFuzzer:             e.BlackboxFuzzer(),
 		greyboxFuzzer:              e.GreyboxFuzzer(),
 		directedGreyboxFuzzer:      e.DirectedGreyboxFuzzer(),
+		directedGreybox2Fuzzer:     e.DirectedGreybox2Fuzzer(),
 		otherDirectedGreyboxFuzzer: e.OtherDirectedGreyboxFuzzer(),
 	}
 }
@@ -29,6 +31,8 @@ func (l *fuzzerLeader) GetFuzzerStrategy(typ common.FuzzingType) (interfaces.Fuz
 		return l.greyboxFuzzer, nil
 	case common.DIRECTED_GREYBOX_FUZZING:
 		return l.directedGreyboxFuzzer, nil
+	case common.DIRECTED_GREYBOX2_FUZZING:
+		return l.directedGreybox2Fuzzer, nil
 	case common.OTHER_DIRECTED_GREYBOX_FUZZING:
 		return l.otherDirectedGreyboxFuzzer, nil
 	default:

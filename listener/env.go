@@ -40,6 +40,7 @@ type Env interface {
 	BlackboxFuzzer() interfaces.Fuzzer
 	GreyboxFuzzer() interfaces.Fuzzer
 	DirectedGreyboxFuzzer() interfaces.Fuzzer
+	DirectedGreybox2Fuzzer() interfaces.Fuzzer
 	OtherDirectedGreyboxFuzzer() interfaces.Fuzzer
 	PowerSchedule() interfaces.PowerSchedule
 }
