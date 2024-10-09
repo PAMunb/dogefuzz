@@ -32,6 +32,7 @@ type FuzzingType string
 const (
 	BLACKBOX_FUZZING               FuzzingType = "blackbox"
 	GREYBOX_FUZZING                FuzzingType = "greybox"
+	ALT_GREYBOX_FUZZING            FuzzingType = "alt_greybox"
 	DIRECTED_GREYBOX_FUZZING       FuzzingType = "directed_greybox"
 	OTHER_DIRECTED_GREYBOX_FUZZING FuzzingType = "other_directed_greybox"
 )
@@ -80,6 +81,7 @@ type PowerScheduleStrategy string
 const (
 	DISTANCE_BASED_STRATEGY          PowerScheduleStrategy = "distance_based"
 	COVERAGE_BASED_STRATEGY          PowerScheduleStrategy = "coverage_based"
+	ALT_COVERAGE_BASED_STRATEGY      PowerScheduleStrategy = "alt_coverage_based"
 	DISTANCE_COVERAGE_BASED_STRATEGY PowerScheduleStrategy = "distance_coverage_based"
 )
 
