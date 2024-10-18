@@ -76,6 +76,7 @@ type Env interface {
 	BlackboxFuzzer() interfaces.Fuzzer
 	GreyboxFuzzer() interfaces.Fuzzer
 	DirectedGreyboxFuzzer() interfaces.Fuzzer
+	AltDirectedGreyboxFuzzer() interfaces.Fuzzer
 	OtherDirectedGreyboxFuzzer() interfaces.Fuzzer
 	PowerSchedule() interfaces.PowerSchedule
 }
@@ -133,6 +134,7 @@ type env struct {
 	blackboxFuzzer             interfaces.Fuzzer
 	greyboxFuzzer              interfaces.Fuzzer
 	directedGreyboxFuzzer      interfaces.Fuzzer
+	altDirectedGreyboxFuzzer   interfaces.Fuzzer
 	otherDirectedGreyboxFuzzer interfaces.Fuzzer
 	powerSchedule              interfaces.PowerSchedule
 }
@@ -477,6 +479,13 @@ func (e *env) DirectedGreyboxFuzzer() interfaces.Fuzzer {
 		e.directedGreyboxFuzzer = fuzz.NewDirectedGreyboxFuzzer(e)
 	}
 	return e.directedGreyboxFuzzer
+}
+
+func (e *env) AltDirectedGreyboxFuzzer() interfaces.Fuzzer {
+	if e.altDirectedGreyboxFuzzer == nil {
+		e.altDirectedGreyboxFuzzer = fuzz.NewAltDirectedGreyboxFuzzer(e)
+	}
+	return e.altDirectedGreyboxFuzzer
 }
 
 func (e *env) OtherDirectedGreyboxFuzzer() interfaces.Fuzzer {
