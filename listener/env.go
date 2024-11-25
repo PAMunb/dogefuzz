@@ -39,6 +39,7 @@ type Env interface {
 	FuzzerLeader() interfaces.FuzzerLeader
 	BlackboxFuzzer() interfaces.Fuzzer
 	GreyboxFuzzer() interfaces.Fuzzer
+	AltGreyboxFuzzer() interfaces.Fuzzer
 	DirectedGreyboxFuzzer() interfaces.Fuzzer
 	AltDirectedGreyboxFuzzer() interfaces.Fuzzer
 	OtherDirectedGreyboxFuzzer() interfaces.Fuzzer

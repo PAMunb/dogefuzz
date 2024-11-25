@@ -14,6 +14,7 @@ type env interface {
 
 	BlackboxFuzzer() interfaces.Fuzzer
 	GreyboxFuzzer() interfaces.Fuzzer
+	AltGreyboxFuzzer() interfaces.Fuzzer
 	DirectedGreyboxFuzzer() interfaces.Fuzzer
 	AltDirectedGreyboxFuzzer() interfaces.Fuzzer
 	OtherDirectedGreyboxFuzzer() interfaces.Fuzzer
@@ -33,6 +34,8 @@ func buildOrderer(strategy common.PowerScheduleStrategy, contract *dto.ContractD
 	switch strategy {
 	case common.COVERAGE_BASED_STRATEGY:
 		return newCoverageBasedOrderer()
+	case common.ALT_COVERAGE_BASED_STRATEGY:
+		return newAltCoverageBasedOrderer()
 	case common.DISTANCE_BASED_STRATEGY:
 		return newDistanceBasedOrderer(contract)
 	case common.ALT_DISTANCE_BASED_STRATEGY:
