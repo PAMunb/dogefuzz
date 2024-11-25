@@ -41,6 +41,7 @@ type Env interface {
 	GreyboxFuzzer() interfaces.Fuzzer
 	AltGreyboxFuzzer() interfaces.Fuzzer
 	DirectedGreyboxFuzzer() interfaces.Fuzzer
+	DirectedGreybox2Fuzzer() interfaces.Fuzzer
 	AltDirectedGreyboxFuzzer() interfaces.Fuzzer
 	OtherDirectedGreyboxFuzzer() interfaces.Fuzzer
 	PowerSchedule() interfaces.PowerSchedule
