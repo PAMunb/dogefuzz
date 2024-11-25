@@ -30,12 +30,29 @@ func (o *altDistanceBasedOrderer) OrderTransactions(transactions []*dto.Transact
 
 func (o *altDistanceBasedOrderer) computeScore(g graph.Graph[string, string], transaction *dto.TransactionDTO) float64 {
 	targetBlocks := findBlocksContainingTargetInstructions(o.contract.CFG, targetInstructions)
-	var score float64 = 0
 	var mapDistanceToTargetInstruction = make(map[string]float64)
 
 	for _, target := range targetBlocks {
 		mapDistanceToTargetInstruction[target] = computeShortestPathToTarget(g, transaction, target)
 	}
+
+	return geometricMeanComputeScore(mapDistanceToTargetInstruction)
+}
+
+func geometricMeanComputeScore(mapDistanceToTargetInstruction map[string]float64) float64 {
+	var score float64 = 0
+
+	for _, distance := range mapDistanceToTargetInstruction {
+		score *= 1 / distance
+	}
+
+	exponent := -1 / float64(len(mapDistanceToTargetInstruction))
+
+	return math.Pow(score, exponent)
+}
+
+func defaultComputeScore(mapDistanceToTargetInstruction map[string]float64) float64 {
+	var score float64 = 0
 
 	for _, distance := range mapDistanceToTargetInstruction {
 		score += 1 / distance
