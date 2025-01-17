@@ -1,7 +1,9 @@
 package fuzz
 
 import (
+	"math/rand"
 	"strings"
+	"time"
 
 	"github.com/dogefuzz/dogefuzz/pkg/common"
 	"github.com/dogefuzz/dogefuzz/pkg/interfaces"
@@ -42,9 +44,20 @@ func (f *directedGreybox2Fuzzer) GenerateInput(functionId string) ([]interface{}
 	}
 	method := abiDefinition.Methods[function.Name]
 
-	seedsList, err := f.powerSchedule.RequestSeeds(functionId, common.DISTANCE_BASED2_STRATEGY)
-	if err != nil {
-		return nil, err
+	rand.Seed(time.Now().UnixNano())
+
+	var seedsList [][]interface{}
+
+	if rand.Float64() < 0.5 {
+		seedsList, err = f.powerSchedule.RequestSeeds(functionId, common.COVERAGE_BASED_STRATEGY)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		seedsList, err = f.powerSchedule.RequestSeeds(functionId, common.DISTANCE_BASED_STRATEGY)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	chosenSeeds := common.RandomChoice(seedsList)
