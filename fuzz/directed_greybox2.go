@@ -49,12 +49,12 @@ func (f *directedGreybox2Fuzzer) GenerateInput(functionId string) ([]interface{}
 	var seedsList [][]interface{}
 
 	if rand.Float64() < 0.5 {
-		seedsList, err = f.powerSchedule.RequestSeeds(functionId, common.COVERAGE_BASED_STRATEGY)
+		seedsList, err = f.powerSchedule.RequestSeeds(functionId, common.ALT_COVERAGE_BASED_STRATEGY)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		seedsList, err = f.powerSchedule.RequestSeeds(functionId, common.DISTANCE_BASED_STRATEGY)
+		seedsList, err = f.powerSchedule.RequestSeeds(functionId, common.ALT_DISTANCE_BASED_STRATEGY)
 		if err != nil {
 			return nil, err
 		}
