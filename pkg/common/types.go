@@ -30,13 +30,13 @@ var (
 type FuzzingType string
 
 const (
-	BLACKBOX_FUZZING               FuzzingType = "blackbox"
-	GREYBOX_FUZZING                FuzzingType = "greybox"
-	ALT_GREYBOX_FUZZING            FuzzingType = "alt_greybox"
-	DIRECTED_GREYBOX_FUZZING       FuzzingType = "directed_greybox"
-	DIRECTED_GREYBOX2_FUZZING      FuzzingType = "directed_greybox2"
-	ALT_DIRECTED_GREYBOX_FUZZING   FuzzingType = "alt_directed_greybox"
-	OTHER_DIRECTED_GREYBOX_FUZZING FuzzingType = "other_directed_greybox"
+	BLACKBOX_FUZZING         FuzzingType = "blackbox"
+	GREYBOX_FUZZING          FuzzingType = "greybox"
+	DIRECTED_GREYBOX_FUZZING FuzzingType = "directed_greybox"
+
+	IMPROVED_GREYBOX_FUZZING          FuzzingType = "improved_greybox"
+	CUSTOM_DIRECTED_GREYBOX_FUZZING   FuzzingType = "custom_directed_greybox"
+	IMPROVED_DIRECTED_GREYBOX_FUZZING FuzzingType = "improved_directed_greybox"
 )
 
 type ContractStatus string
@@ -81,12 +81,12 @@ type DistanceMap map[string]map[string]uint32 // blockPC => instruction => dista
 type PowerScheduleStrategy string
 
 const (
-	DISTANCE_BASED_STRATEGY          PowerScheduleStrategy = "distance_based"
-	DISTANCE_BASED2_STRATEGY         PowerScheduleStrategy = "distance_based2"
-	ALT_DISTANCE_BASED_STRATEGY      PowerScheduleStrategy = "alt_distance_based"
-	COVERAGE_BASED_STRATEGY          PowerScheduleStrategy = "coverage_based"
-	ALT_COVERAGE_BASED_STRATEGY      PowerScheduleStrategy = "alt_coverage_based"
-	DISTANCE_COVERAGE_BASED_STRATEGY PowerScheduleStrategy = "distance_coverage_based"
+	DISTANCE_BASED_STRATEGY PowerScheduleStrategy = "distance_based"
+	COVERAGE_BASED_STRATEGY PowerScheduleStrategy = "coverage_based"
+
+	IMPROVED_COVERAGE_BASED_STRATEGY       PowerScheduleStrategy = "improved_coverage_based"
+	FUNCTION_LEVEL_BASED_STRATEGY          PowerScheduleStrategy = "function_level_based"
+	IMPROVED_FUNCTION_LEVEL_BASED_STRATEGY PowerScheduleStrategy = "improved_function_level_based"
 )
 
 type TaskReport struct {

@@ -39,10 +39,11 @@ type Env interface {
 	FuzzerLeader() interfaces.FuzzerLeader
 	BlackboxFuzzer() interfaces.Fuzzer
 	GreyboxFuzzer() interfaces.Fuzzer
-	AltGreyboxFuzzer() interfaces.Fuzzer
 	DirectedGreyboxFuzzer() interfaces.Fuzzer
-	DirectedGreybox2Fuzzer() interfaces.Fuzzer
-	AltDirectedGreyboxFuzzer() interfaces.Fuzzer
-	OtherDirectedGreyboxFuzzer() interfaces.Fuzzer
+
+	ImprovedGreyboxFuzzer() interfaces.Fuzzer
+	CustomDirectedGreyboxFuzzer() interfaces.Fuzzer
+	ImprovedDirectedGreyboxFuzzer() interfaces.Fuzzer
+
 	PowerSchedule() interfaces.PowerSchedule
 }

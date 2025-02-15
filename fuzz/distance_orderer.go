@@ -34,7 +34,7 @@ func (o *distanceBasedOrderer) computeScore(transaction *dto.TransactionDTO) flo
 
 	var maxDistance map[string]uint32
 	for _, distance := range o.contract.DistanceMap {
-		if maxDistance != nil {
+		if maxDistance == nil {
 			maxDistance = make(map[string]uint32, 0)
 			for pc := range distance {
 				maxDistance[pc] = 0

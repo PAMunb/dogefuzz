@@ -14,11 +14,12 @@ type env interface {
 
 	BlackboxFuzzer() interfaces.Fuzzer
 	GreyboxFuzzer() interfaces.Fuzzer
-	DirectedGreybox2Fuzzer() interfaces.Fuzzer
-	AltGreyboxFuzzer() interfaces.Fuzzer
 	DirectedGreyboxFuzzer() interfaces.Fuzzer
-	AltDirectedGreyboxFuzzer() interfaces.Fuzzer
-	OtherDirectedGreyboxFuzzer() interfaces.Fuzzer
+
+	ImprovedGreyboxFuzzer() interfaces.Fuzzer
+	CustomDirectedGreyboxFuzzer() interfaces.Fuzzer
+	ImprovedDirectedGreyboxFuzzer() interfaces.Fuzzer
+
 	PowerSchedule() interfaces.PowerSchedule
 
 	TransactionService() interfaces.TransactionService
@@ -35,16 +36,14 @@ func buildOrderer(strategy common.PowerScheduleStrategy, contract *dto.ContractD
 	switch strategy {
 	case common.COVERAGE_BASED_STRATEGY:
 		return newCoverageBasedOrderer()
-	case common.ALT_COVERAGE_BASED_STRATEGY:
-		return newAltCoverageBasedOrderer()
 	case common.DISTANCE_BASED_STRATEGY:
 		return newDistanceBasedOrderer(contract)
-	case common.DISTANCE_BASED2_STRATEGY:
-		return newDistanceBased2Orderer(contract)
-	case common.ALT_DISTANCE_BASED_STRATEGY:
-		return newAltDistanceBasedOrderer(contract)
-	case common.DISTANCE_COVERAGE_BASED_STRATEGY:
-		return newDistanceCoverageBasedOrderer(contract)
+	case common.IMPROVED_COVERAGE_BASED_STRATEGY:
+		return newImprovedCoverageBasedOrderer()
+	case common.FUNCTION_LEVEL_BASED_STRATEGY:
+		return newFunctionLevelBasedOrderer(contract)
+	case common.IMPROVED_FUNCTION_LEVEL_BASED_STRATEGY:
+		return newImprovedFunctionLevelBasedOrderer(contract)
 	default:
 		panic(fmt.Sprintf("invalid power schedule strategy: %s", strategy))
 	}

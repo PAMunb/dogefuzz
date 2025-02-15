@@ -18,6 +18,8 @@ type Transaction struct {
 	DeltaCoverage            string
 	DeltaMinDistance         string
 	Coverage                 string
+	Distance                 float64
+	Energy                   float64
 	CriticalInstructionsHits string
 	Status                   common.TransactionStatus `gorm:"not null"`
 }

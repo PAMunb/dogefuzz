@@ -8,7 +8,7 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 )
 
-type altDirectedGreyboxFuzzer struct {
+type improvedGreyboxFuzzer struct {
 	powerSchedule interfaces.PowerSchedule
 
 	solidityService interfaces.SolidityService
@@ -16,8 +16,8 @@ type altDirectedGreyboxFuzzer struct {
 	contractService interfaces.ContractService
 }
 
-func NewAltDirectedGreyboxFuzzer(e env) *altDirectedGreyboxFuzzer {
-	return &altDirectedGreyboxFuzzer{
+func NewImprovedGreyboxFuzzer(e env) *improvedGreyboxFuzzer {
+	return &improvedGreyboxFuzzer{
 		powerSchedule:   e.PowerSchedule(),
 		solidityService: e.SolidityService(),
 		functionService: e.FunctionService(),
@@ -25,7 +25,7 @@ func NewAltDirectedGreyboxFuzzer(e env) *altDirectedGreyboxFuzzer {
 	}
 }
 
-func (f *altDirectedGreyboxFuzzer) GenerateInput(functionId string) ([]interface{}, error) {
+func (f *improvedGreyboxFuzzer) GenerateInput(functionId string) ([]interface{}, error) {
 	function, err := f.functionService.Get(functionId)
 	if err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func (f *altDirectedGreyboxFuzzer) GenerateInput(functionId string) ([]interface
 	}
 	method := abiDefinition.Methods[function.Name]
 
-	seedsList, err := f.powerSchedule.RequestSeeds(functionId, common.ALT_DISTANCE_BASED_STRATEGY)
+	seedsList, err := f.powerSchedule.RequestSeeds(functionId, common.IMPROVED_COVERAGE_BASED_STRATEGY)
 	if err != nil {
 		return nil, err
 	}
@@ -60,6 +60,5 @@ func (f *altDirectedGreyboxFuzzer) GenerateInput(functionId string) ([]interface
 		mutationFunction()
 		inputs[inputsIdx] = handler.GetValue()
 	}
-
 	return inputs, nil
 }

@@ -1,16 +1,14 @@
 package fuzz
 
 import (
-	"math/rand"
 	"strings"
-	"time"
 
 	"github.com/dogefuzz/dogefuzz/pkg/common"
 	"github.com/dogefuzz/dogefuzz/pkg/interfaces"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 )
 
-type directedGreybox2Fuzzer struct {
+type improvedDirectedGreyboxFuzzer struct {
 	powerSchedule interfaces.PowerSchedule
 
 	solidityService interfaces.SolidityService
@@ -18,8 +16,8 @@ type directedGreybox2Fuzzer struct {
 	contractService interfaces.ContractService
 }
 
-func NewDirectedGreybox2Fuzzer(e env) *directedGreybox2Fuzzer {
-	return &directedGreybox2Fuzzer{
+func NewImprovedDirectedGreyboxFuzzer(e env) *improvedDirectedGreyboxFuzzer {
+	return &improvedDirectedGreyboxFuzzer{
 		powerSchedule:   e.PowerSchedule(),
 		solidityService: e.SolidityService(),
 		functionService: e.FunctionService(),
@@ -27,7 +25,7 @@ func NewDirectedGreybox2Fuzzer(e env) *directedGreybox2Fuzzer {
 	}
 }
 
-func (f *directedGreybox2Fuzzer) GenerateInput(functionId string) ([]interface{}, error) {
+func (f *improvedDirectedGreyboxFuzzer) GenerateInput(functionId string) ([]interface{}, error) {
 	function, err := f.functionService.Get(functionId)
 	if err != nil {
 		return nil, err
@@ -44,20 +42,9 @@ func (f *directedGreybox2Fuzzer) GenerateInput(functionId string) ([]interface{}
 	}
 	method := abiDefinition.Methods[function.Name]
 
-	rand.Seed(time.Now().UnixNano())
-
-	var seedsList [][]interface{}
-
-	if rand.Float64() < 0.5 {
-		seedsList, err = f.powerSchedule.RequestSeeds(functionId, common.ALT_COVERAGE_BASED_STRATEGY)
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		seedsList, err = f.powerSchedule.RequestSeeds(functionId, common.ALT_DISTANCE_BASED_STRATEGY)
-		if err != nil {
-			return nil, err
-		}
+	seedsList, err := f.powerSchedule.RequestSeeds(functionId, common.IMPROVED_FUNCTION_LEVEL_BASED_STRATEGY)
+	if err != nil {
+		return nil, err
 	}
 
 	chosenSeeds := common.RandomChoice(seedsList)

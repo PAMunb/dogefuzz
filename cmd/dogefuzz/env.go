@@ -75,11 +75,12 @@ type Env interface {
 	FuzzerLeader() interfaces.FuzzerLeader
 	BlackboxFuzzer() interfaces.Fuzzer
 	GreyboxFuzzer() interfaces.Fuzzer
-	AltGreyboxFuzzer() interfaces.Fuzzer
 	DirectedGreyboxFuzzer() interfaces.Fuzzer
-	DirectedGreybox2Fuzzer() interfaces.Fuzzer
-	AltDirectedGreyboxFuzzer() interfaces.Fuzzer
-	OtherDirectedGreyboxFuzzer() interfaces.Fuzzer
+
+	ImprovedGreyboxFuzzer() interfaces.Fuzzer
+	CustomDirectedGreyboxFuzzer() interfaces.Fuzzer
+	ImprovedDirectedGreyboxFuzzer() interfaces.Fuzzer
+
 	PowerSchedule() interfaces.PowerSchedule
 }
 
@@ -132,15 +133,16 @@ type env struct {
 	transactionsCheckerJob        interfaces.CronJob
 	transactionsTimeoutCheckerJob interfaces.CronJob
 
-	fuzzerLeader               interfaces.FuzzerLeader
-	blackboxFuzzer             interfaces.Fuzzer
-	greyboxFuzzer              interfaces.Fuzzer
-	altGreyboxFuzzer           interfaces.Fuzzer
-	directedGreyboxFuzzer      interfaces.Fuzzer
-	directedGreybox2Fuzzer     interfaces.Fuzzer
-	altDirectedGreyboxFuzzer   interfaces.Fuzzer
-	otherDirectedGreyboxFuzzer interfaces.Fuzzer
-	powerSchedule              interfaces.PowerSchedule
+	fuzzerLeader          interfaces.FuzzerLeader
+	blackboxFuzzer        interfaces.Fuzzer
+	greyboxFuzzer         interfaces.Fuzzer
+	directedGreyboxFuzzer interfaces.Fuzzer
+
+	improvedGreyboxFuzzer         interfaces.Fuzzer
+	customDirectedGreyboxFuzzer   interfaces.Fuzzer
+	improvedDirectedGreyboxFuzzer interfaces.Fuzzer
+
+	powerSchedule interfaces.PowerSchedule
 }
 
 func NewEnv(cfg *config.Config) *env {
@@ -478,13 +480,6 @@ func (e *env) GreyboxFuzzer() interfaces.Fuzzer {
 	return e.greyboxFuzzer
 }
 
-func (e *env) AltGreyboxFuzzer() interfaces.Fuzzer {
-	if e.altGreyboxFuzzer == nil {
-		e.altGreyboxFuzzer = fuzz.NewAltGreyboxFuzzer(e)
-	}
-	return e.altGreyboxFuzzer
-}
-
 func (e *env) DirectedGreyboxFuzzer() interfaces.Fuzzer {
 	if e.directedGreyboxFuzzer == nil {
 		e.directedGreyboxFuzzer = fuzz.NewDirectedGreyboxFuzzer(e)
@@ -492,25 +487,25 @@ func (e *env) DirectedGreyboxFuzzer() interfaces.Fuzzer {
 	return e.directedGreyboxFuzzer
 }
 
-func (e *env) DirectedGreybox2Fuzzer() interfaces.Fuzzer {
-	if e.directedGreybox2Fuzzer == nil {
-		e.directedGreybox2Fuzzer = fuzz.NewDirectedGreybox2Fuzzer(e)
+func (e *env) ImprovedGreyboxFuzzer() interfaces.Fuzzer {
+	if e.improvedGreyboxFuzzer == nil {
+		e.improvedGreyboxFuzzer = fuzz.NewImprovedGreyboxFuzzer(e)
 	}
-	return e.directedGreybox2Fuzzer
+	return e.improvedGreyboxFuzzer
 }
 
-func (e *env) AltDirectedGreyboxFuzzer() interfaces.Fuzzer {
-	if e.altDirectedGreyboxFuzzer == nil {
-		e.altDirectedGreyboxFuzzer = fuzz.NewAltDirectedGreyboxFuzzer(e)
+func (e *env) CustomDirectedGreyboxFuzzer() interfaces.Fuzzer {
+	if e.customDirectedGreyboxFuzzer == nil {
+		e.customDirectedGreyboxFuzzer = fuzz.NewCustomDirectedGreyboxFuzzer(e)
 	}
-	return e.altDirectedGreyboxFuzzer
+	return e.customDirectedGreyboxFuzzer
 }
 
-func (e *env) OtherDirectedGreyboxFuzzer() interfaces.Fuzzer {
-	if e.otherDirectedGreyboxFuzzer == nil {
-		e.otherDirectedGreyboxFuzzer = fuzz.NewOtherDirectedGreyboxFuzzer(e)
+func (e *env) ImprovedDirectedGreyboxFuzzer() interfaces.Fuzzer {
+	if e.improvedDirectedGreyboxFuzzer == nil {
+		e.improvedDirectedGreyboxFuzzer = fuzz.NewImprovedDirectedGreyboxFuzzer(e)
 	}
-	return e.otherDirectedGreyboxFuzzer
+	return e.improvedDirectedGreyboxFuzzer
 }
 
 func (e *env) PowerSchedule() interfaces.PowerSchedule {
