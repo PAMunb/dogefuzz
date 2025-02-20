@@ -4,6 +4,7 @@ import (
 	"math"
 
 	"github.com/dogefuzz/dogefuzz/pkg/common"
+	"github.com/dominikbraun/graph"
 )
 
 func ComputeDistanceMap(cfg common.CFG, targetInstructions []string) common.DistanceMap {
@@ -46,6 +47,55 @@ func ComputeTargetInstructionsFrequency(cfg common.CFG, targetInstructions []str
 		}
 	}
 	return count
+}
+
+func ComputeDistance(cfg common.CFG, instructionsExecutedInTransaction []string, targetInstructions []string) float64 {
+	g := generateOriginalGraph(cfg)
+	targetBlocks := findBlocksContainingTargetInstructions(cfg, targetInstructions)
+
+	return computeDistanceToInstruction(g, instructionsExecutedInTransaction, targetBlocks)
+}
+
+func computeDistanceToInstruction(g graph.Graph[string, string], instructionsExecutedInTransaction []string, targetBlocks []string) float64 {
+	var distance = 0.0
+	var minDistance = math.MaxFloat64
+
+	for _, target := range targetBlocks {
+		for _, source := range instructionsExecutedInTransaction {
+			k, err := graph.ShortestPath(g, source, target)
+			if err != nil {
+				continue
+			}
+
+			if float64(len(k)) < minDistance {
+				minDistance = float64(len(k))
+			}
+		}
+
+		distance += minDistance
+	}
+
+	if distance == 0.0 {
+		return math.MaxFloat64
+	}
+
+	return distance / float64(len(targetBlocks))
+}
+
+func generateOriginalGraph(cfg common.CFG) graph.Graph[string, string] {
+	g := graph.New(graph.StringHash, graph.Directed())
+
+	for key := range cfg.Graph {
+		_ = g.AddVertex(key)
+	}
+
+	for key, value := range cfg.Graph {
+		for _, v := range value {
+			_ = g.AddEdge(key, v)
+		}
+	}
+
+	return g
 }
 
 func findBlocksContainingTargetInstructions(cfg common.CFG, targetInstructions []string) []string {

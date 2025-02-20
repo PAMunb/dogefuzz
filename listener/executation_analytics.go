@@ -65,6 +65,7 @@ func (l *executionAnalyticsListener) processEvent(ctx context.Context, evt bus.I
 	transaction.Coverage = coverage.ComputeCoverage(contract.CFG, transaction.ExecutedInstructions)
 	transaction.DeltaCoverage = coverage.ComputeDeltaCoverage(contract.CFG, transaction.ExecutedInstructions, task.AggregatedExecutedInstructions)
 	transaction.DeltaMinDistance = distance.ComputeDeltaMinDistance(contract.DistanceMap, transaction.ExecutedInstructions, task.AggregatedExecutedInstructions)
+	transaction.Distance = distance.ComputeDistance(contract.CFG, transaction.ExecutedInstructions, l.cfg.FuzzerConfig.CritialInstructions)
 	executedInstructionNames := l.getInstructionNames(transaction.ExecutedInstructions, contract)
 	transaction.CriticalInstructionsHits = common.SumOccurrencesOfStringList(l.cfg.FuzzerConfig.CritialInstructions, executedInstructionNames)
 
